@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+    .h1{
+        color:rgb(41, 154, 152);
+        font-size:40px;
+    }
+    .background{
+        background-color:white;
+        height:100vh;
+        width:100vw;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+    }
+    .HorizontalDiv{
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        justify-content:center;
+        gap:30px;
+    }
+    .button{
+        height:6vh;
+        width:13vw;
+        font-size:20px;
+        border-radius:10px;
+        font-weight:bold;
+    }
+    .Time{
+        font-size:45px;
+        text-align: center; 
+        width: 150px;
+        margin-bottom:30px;
+        outline:none;
+        border: 2px solid rgb(41, 154, 152);
+        border-radius:10px;  
+    }
+
+</style>
+
+<body>
+
+    <div class="background">
+        <h1 class="h1">TIMER</h1>
+        <input type="text" id="TimeInput" value="00:00" class="Time">
+
+        <div class="HorizontalDiv">
+            <button class="button" style="background-color:rgb(41, 154, 152);" onclick="Start()">START</button>
+            <button class="button"  style="background-color:rgb(229, 17, 17);" onclick="Stop()">STOP</button>
+            <button class="button"  style="background-color:rgb(107, 219, 157);" onclick="Reset()">RESET</button>
+    
+        </div>
+
+    </div>
+   
+
+</body>
+
+<script type="text/javascript">
+    
+    let timer = null;
+    let totalSeconds = 0;
+
+    const input = document.getElementById("TimeInput");
+
+    function parseTimeInput() {
+      const parts = input.value.split(":");
+      let minutes = parseInt(parts[0]) || 0;
+      let seconds = parseInt(parts[1]) || 0;
+      seconds = Math.min(Math.max(seconds, 0), 59); 
+      totalSeconds = minutes * 60 + seconds;
+    }
+
+    function updateInputDisplay() {
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+      input.value = `${minutes}:${seconds}`;
+    }
+
+    function Start() {
+      if (timer !== null) return; 
+      parseTimeInput();
+
+      if (totalSeconds <= 0) {
+        alert("Please enter a valid time.");
+        return;
+      }
+
+      timer = setInterval(() => {
+        if (totalSeconds <= 0) {
+          Stop();
+          alert("Time's up!");
+          return;
+        }
+        totalSeconds--;
+        updateInputDisplay();
+      }, 1000);
+    }
+
+    function Stop() {
+      clearInterval(timer);
+      timer = null;
+    }
+
+    function Reset() {
+      Stop();
+      totalSeconds = 0;
+      input.value = "00:00";
+    }
+</script>
+</html>
